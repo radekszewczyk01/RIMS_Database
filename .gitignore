@@ -1,0 +1,9 @@
+# Ignore everything in this repo by default
+*
+
+# Keep LaTeX source and Markdown docs
+!*.tex
+!*.md
+
+# Keep this file
+!.gitignore
