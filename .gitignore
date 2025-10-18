@@ -1,9 +1,21 @@
 # Ignore everything in this repo by default
 *
 
+# Keep this file
+!.gitignore
+
 # Keep LaTeX source and Markdown docs
 !*.tex
 !*.md
 
-# Keep this file
-!.gitignore
+# Keep sql directory and its SQL files (plus readme)
+!sql/
+sql/*
+!sql/*.sql
+!sql/*.md
+
+# Keep scripts directory and its shell/markdown files
+!scripts/
+scripts/*
+!scripts/*.sh
+!scripts/*.md
