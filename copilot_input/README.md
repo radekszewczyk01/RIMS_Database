@@ -1,0 +1,1 @@
+Folder zawiera wejściowe pliki kontekstowe użyte przez Copilota (pełna_konwersacja.md, polecenie.md, pomoc.md).
