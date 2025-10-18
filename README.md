@@ -83,6 +83,20 @@ chmod +x scripts/*.sh
 ./scripts/show_results.sh
 ```
 
+### Podgląd danych w przeglądarce (GitHub Pages)
+
+- Strona: po włączeniu Pages (Settings → Pages → Deploy from a branch → main /docs) będzie dostępna pod adresem:
+	https://radekszewczyk01.github.io/RIMS_Database/
+- Aktualizacja zawartości `docs/` (index.html + CSV):
+	```bash
+	# jednorazowo
+	chmod +x scripts/*.sh
+  
+	# eksport + publikacja + commit/push
+	./scripts/export_and_publish.sh "docs: refresh GitHub Pages preview"
+	```
+	Skrypt wywołuje `export_rims.sh` (tworzy schema.sql, CSV i index.html), następnie `publish_docs.sh` (kopiuje do `docs/`).
+
 ## Uwierzytelnianie i środowisko
 
 Lokalnie działa autoryzacja peer dla roli `postgres` (stąd `sudo -u postgres`). Alternatywnie użyj `PGHOST/PGPORT/PGUSER/PGPASSWORD` i odpowiednio zmień skrypty.
