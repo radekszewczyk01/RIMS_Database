@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ibhE7bQcJ7SZorjvZL1YKp8VkjlHbhGbyEYxPdTCajk0JYGJgeKmR1cDFWw9kGJ
+\restrict V0YyBUKekw618JhzUYdDAUcYfu91ZGVkmE0phUpkOf3k4WWGF29G6a3GCLcgWgK
 
 -- Dumped from database version 16.10 (Ubuntu 16.10-0ubuntu0.24.04.1)
 -- Dumped by pg_dump version 16.10 (Ubuntu 16.10-0ubuntu0.24.04.1)
@@ -896,5 +896,5 @@ ALTER TABLE ONLY public.zarzutnierzetelnosci
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ibhE7bQcJ7SZorjvZL1YKp8VkjlHbhGbyEYxPdTCajk0JYGJgeKmR1cDFWw9kGJ
+\unrestrict V0YyBUKekw618JhzUYdDAUcYfu91ZGVkmE0phUpkOf3k4WWGF29G6a3GCLcgWgK
 

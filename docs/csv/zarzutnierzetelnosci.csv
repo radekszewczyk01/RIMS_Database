@@ -9,3 +9,13 @@ id_zarzutu,typ_nierzetelnosci,status,data_zgloszenia,czy_wycofany,id_artykulu
 13,błąd metodologiczny,zakończony,2024-05-05,t,55
 14,inne,w toku,2024-05-20,f,61
 15,plagiat,zakończony,2024-02-01,t,44
+16,dane fałszywe,w toku,2024-03-12,f,48
+17,manipulacja recenzją,zakończony,2024-04-10,t,52
+18,błąd metodologiczny,zakończony,2024-05-05,t,55
+19,inne,w toku,2024-05-20,f,61
+20,plagiat,zakończony,2024-02-01,t,44
+21,dane fałszywe,w toku,2024-03-12,f,48
+22,manipulacja recenzją,zakończony,2024-04-10,t,52
+23,błąd metodologiczny,zakończony,2024-05-05,t,55
+24,inne,w toku,2024-05-20,f,61
+25,plagiat,zakończony,2024-02-01,t,44
