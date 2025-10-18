@@ -19,6 +19,7 @@ sql/*
 scripts/*
 !scripts/*.sh
 !scripts/*.md
+!scripts/*.py
 
 # Keep copilot_input directory and its Markdown files
 !copilot_input/
