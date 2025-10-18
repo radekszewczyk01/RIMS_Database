@@ -2,6 +2,11 @@
 
 Helper scripts to set up the RIMS database, show example results, and export data for sharing.
 
+Folder structure:
+- `db/` – database lifecycle helpers (e.g., `setup_db.sh`).
+- `export/` – export/publish helpers (kept top-level for backwards compatibility wrappers).
+- `examples/` – runnable examples (e.g., procedure demo).
+
 - `setup_db.sh` – runs `sql/00_all.sql` and `sql/data_and_features.sql` using the OS `postgres` user via sudo.
 - `show_results.sh` – prints the results for key verification queries.
 - `export_rims.sh` – exports schema.sql, CSV per table, and generates index.html preview; outputs a tar.gz ready to upload (e.g., OneDrive).
@@ -28,6 +33,29 @@ chmod +x scripts/*.sh
 # Skip HTML preview or change number of rows in preview
 ./scripts/export_rims.sh --no-html
 ./scripts/export_rims.sh --preview-rows 100
+
+# Run procedure usage demo (InsertNewArticle, UpdateWR)
+./scripts/examples/run_procedures_demo.sh
+```
+
+## GitHub Pages (podgląd danych w przeglądarce)
+
+Włączenie:
+1. Na GitHub: Settings → Pages.
+2. Build and deployment: Deploy from a branch.
+3. Branch: `main`, Folder: `/docs`.
+
+Odświeżanie zawartości `docs/`:
+```bash
+# Jednym krokiem (eksport → publikacja → commit/push)
+./scripts/refresh_pages.sh "docs: refresh GitHub Pages preview"
+
+# Albo manualnie krok po kroku
+./scripts/export_rims.sh --as-postgres --preview-rows 50
+./scripts/publish_docs.sh
+git add docs
+git commit -m "docs: refresh GitHub Pages preview"
+git push origin HEAD:main
 ```
 
 Notes:

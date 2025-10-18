@@ -13,6 +13,9 @@
 sql/*
 !sql/*.sql
 !sql/*.md
+!sql/examples/
+sql/examples/*
+!sql/examples/*.sql
 
 # Keep scripts directory and its shell/markdown files
 !scripts/
@@ -20,6 +23,15 @@ scripts/*
 !scripts/*.sh
 !scripts/*.md
 !scripts/*.py
+!scripts/db/
+scripts/db/*
+!scripts/db/*.sh
+!scripts/export/
+scripts/export/*
+!scripts/export/*.sh
+!scripts/examples/
+scripts/examples/*
+!scripts/examples/*.sh
 
 # Keep docs site for GitHub Pages
 !docs/

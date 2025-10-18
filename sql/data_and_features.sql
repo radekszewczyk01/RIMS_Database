@@ -173,6 +173,86 @@ JOIN Artykul a1 ON a1.doi = x.doi1
 JOIN Artykul a2 ON a2.doi = x.doi2
 ON CONFLICT DO NOTHING;
 
+-- [ADDITION] Politechnika Warszawska: afiliacja, autorzy, czasopismo, artykuły i powiązania
+
+-- Afiliacja: Politechnika Warszawska
+INSERT INTO Afiliacja (nazwa, kraj, miasto)
+VALUES ('Politechnika Warszawska', 'Polska', 'Warszawa')
+ON CONFLICT (nazwa) DO NOTHING;
+
+-- Autorzy PW (trzech, z unikalnymi ORCID)
+INSERT INTO Autor (imie, nazwisko, orcid, id_afiliacji)
+SELECT x.imie, x.nazw, x.orcid, a.id_afiliacji
+FROM (
+  VALUES
+    ('Jan', 'Zieliński', '0000-0006-6666-6666'),
+    ('Magdalena', 'Wiśniewska', '0000-0007-7777-7777'),
+    ('Tomasz', 'Kaczmarek', '0000-0008-8888-8888')
+) AS x(imie, nazw, orcid)
+JOIN Afiliacja a ON a.nazwa = 'Politechnika Warszawska'
+ON CONFLICT (orcid) DO NOTHING;
+
+-- Dodatkowe czasopismo: Warsaw Tech Reports (u wydawcy SciPress, dyscyplina Informatyka)
+INSERT INTO Czasopisma (tytul, impact_factor, id_wydawcy, id_dyscypliny)
+SELECT 'Warsaw Tech Reports', 0.300::DECIMAL(5,3), w.id_wydawcy, d.id_dyscypliny
+FROM Wydawca w
+JOIN Dyscypliny d ON d.nazwa = 'Informatyka'
+WHERE w.nazwa = 'SciPress'
+ON CONFLICT (tytul) DO NOTHING;
+
+-- Artykuły PW (3 szt.) w Warsaw Tech Reports
+INSERT INTO Artykul (
+  tytul, doi, rok_publikacji, punkty_mein, wspolczynnik_rzetelnosci, data_ostatniej_aktualizacji, id_czasopisma
+) VALUES
+  ('Inżynieria oprogramowania na PW', '10.6000/wtr.0001', 2024, 80, 0.450, DATE '2025-10-18', (SELECT id_czasopisma FROM Czasopisma WHERE tytul='Warsaw Tech Reports')),
+  ('Systemy wbudowane na PW',       '10.6000/wtr.0002', 2023, 70, 0.620, DATE '2025-10-18', (SELECT id_czasopisma FROM Czasopisma WHERE tytul='Warsaw Tech Reports')),
+  ('Sieci 5G w kampusie PW',        '10.6000/wtr.0003', 2022, 85, 0.300, DATE '2025-10-18', (SELECT id_czasopisma FROM Czasopisma WHERE tytul='Warsaw Tech Reports'))
+ON CONFLICT (doi) DO NOTHING;
+
+-- Powiązania artykuł–autor (kolejność autorów)
+-- 10.6000/wtr.0001 → Jan Zieliński (1), Magdalena Wiśniewska (2)
+INSERT INTO Artykul_Autor (id_artykulu, id_autora, kolejnosc_autora)
+SELECT a.id_artykulu, au.id_autora, 1
+FROM Artykul a JOIN Autor au ON a.doi='10.6000/wtr.0001' AND au.orcid='0000-0006-6666-6666'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO Artykul_Autor (id_artykulu, id_autora, kolejnosc_autora)
+SELECT a.id_artykulu, au.id_autora, 2
+FROM Artykul a JOIN Autor au ON a.doi='10.6000/wtr.0001' AND au.orcid='0000-0007-7777-7777'
+ON CONFLICT DO NOTHING;
+
+-- 10.6000/wtr.0002 → Magdalena Wiśniewska (1), Tomasz Kaczmarek (2)
+INSERT INTO Artykul_Autor (id_artykulu, id_autora, kolejnosc_autora)
+SELECT a.id_artykulu, au.id_autora, 1
+FROM Artykul a JOIN Autor au ON a.doi='10.6000/wtr.0002' AND au.orcid='0000-0007-7777-7777'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO Artykul_Autor (id_artykulu, id_autora, kolejnosc_autora)
+SELECT a.id_artykulu, au.id_autora, 2
+FROM Artykul a JOIN Autor au ON a.doi='10.6000/wtr.0002' AND au.orcid='0000-0008-8888-8888'
+ON CONFLICT DO NOTHING;
+
+-- 10.6000/wtr.0003 → Tomasz Kaczmarek (1)
+INSERT INTO Artykul_Autor (id_artykulu, id_autora, kolejnosc_autora)
+SELECT a.id_artykulu, au.id_autora, 1
+FROM Artykul a JOIN Autor au ON a.doi='10.6000/wtr.0003' AND au.orcid='0000-0008-8888-8888'
+ON CONFLICT DO NOTHING;
+
+-- Finansowanie NCN dla artykułów PW
+INSERT INTO Artykul_ZrodloFinansowania (id_artykulu, id_zrodla)
+SELECT a.id_artykulu, z.id_zrodla
+FROM Artykul a
+JOIN ZrodloFinansowania z ON z.nazwa = 'NCN'
+WHERE a.doi IN ('10.6000/wtr.0001','10.6000/wtr.0002','10.6000/wtr.0003')
+ON CONFLICT DO NOTHING;
+
+-- Cytowanie: artykuł PW cytuje wcześniejszy z Journal of Computing
+INSERT INTO Cytowanie (id_cytujacego, id_cytowanego, data_zdarzenia)
+SELECT a1.id_artykulu, a2.id_artykulu, DATE '2025-10-18'
+FROM Artykul a1, Artykul a2
+WHERE a1.doi = '10.6000/wtr.0001' AND a2.doi = '10.1000/jc.0001'
+ON CONFLICT DO NOTHING;
+
 COMMIT;
 
 -- 2) PROCEDURES (simplified) using plpgsql

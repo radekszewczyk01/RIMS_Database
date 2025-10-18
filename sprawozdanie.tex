@@ -19,18 +19,31 @@
 \begin{document}
 \maketitle
 
-\section{Wstęp i źródła}
-To sprawozdanie dokumentuje przygotowanie i uruchomienie bazy danych RIMS w PostgreSQL, wraz z danymi testowymi, procedurami, widokami oraz skryptami pomocniczymi.
+\section{Jak powstał projekt (źródła i proces)}
+Projekt zrealizowano w trzech krokach:
+\begin{enumerate}
+  \item \textbf{Modelowanie (Lucidchart)}: zaprojektowano schemat ERD i wyeksportowano go do pliku \texttt{MojeERD.csv}.
+  \item \textbf{Analiza i specyfikacja (Gemini)}: plik CSV przeanalizowano w narzędziu \textbf{Gemini}; na tej podstawie powstały pliki \texttt{pomoc.md} (wskazówki dot. 3NF) oraz \texttt{polecenie.md} (wymagania i zakres).
+  \item \textbf{Implementacja (Copilot + VS Code)}: w oparciu o powyższe materiały, z pomocą Copilota przygotowano schemat i dane w SQL, skrypty bash oraz dokumentację. Efektem pracy jest publiczne repozytorium i strona podglądu.
+\end{enumerate}
 
-Pliki \texttt{polecenie.md} oraz \texttt{pomoc.md} powstały przy użyciu narzędzia \textbf{Gemini}. Do Gemini załączono plik \texttt{MojeERD.csv}, który został wyeksportowany z narzędzia \textbf{Lucidchart} na podstawie stworzonego tam schematu bazy danych.
+Linki:
+\begin{itemize}
+  \item Repozytorium: \url{https://github.com/radekszewczyk01/RIMS_Database/}
+  \item GitHub Pages (podgląd CSV/HTML): \url{https://radekszewczyk01.github.io/RIMS_Database/}
+\end{itemize}
 
-\section{Struktura repozytorium}
+Pliki wejściowe i pochodzenie: \texttt{MojeERD.csv} (Lucidchart), \texttt{pomoc.md} i \texttt{polecenie.md} (Gemini), a także \texttt{pełna\_konwersacja.md} (zapis działań).
+
+\section{Szczegóły techniczne}
+
+\subsection{Struktura repozytorium}
 Najważniejsze elementy: \texttt{MojeERD.csv} (eksport ERD z Lucidchart), \texttt{pomoc.md} (wytyczne 3NF), folder \texttt{sql/} (skrypty: m.in. \texttt{00\_all.sql}, \texttt{02\_schema.sql}, \texttt{03\_indexes\_views.sql}, \texttt{data\_and\_features.sql}), folder \texttt{scripts/} (\texttt{setup\_db.sh}, \texttt{show\_results.sh}) oraz \texttt{pełna\_konwersacja.md}.
 
-\section{Model danych i normalizacja (3NF)}
+\subsection{Model danych i normalizacja (3NF)}
 Na bazie \texttt{pomoc.md} i ERD: dodano słowniki (\texttt{Dyscypliny}) i \texttt{Czasopisma}; znormalizowano łańcuch Wydawca$\rightarrow$Czasopismo$\rightarrow$Artykuł; PK to \texttt{SERIAL} (INT); kluczowe kolumny mają \texttt{NOT NULL}; relacje N:M są przez \texttt{Artykul\_Autor} i \texttt{Artykul\_ZrodloFinansowania}.
 
-\section{Tabele (skrót)}
+\subsection{Tabele (skrót)}
 \begin{longtable}{p{0.25\linewidth}p{0.7\linewidth}}
 \textbf{Wydawca} & id\_wydawcy PK, nazwa UNIQUE NOT NULL, kraj, srednia\_retrakcji, czy\_otwarty\_dostep \\
 \textbf{Afiliacja} & id\_afiliacji PK, nazwa UNIQUE NOT NULL, kraj, miasto \\
@@ -46,7 +59,7 @@ Na bazie \texttt{pomoc.md} i ERD: dodano słowniki (\texttt{Dyscypliny}) i \text
 \textbf{ZarzutNierzetelnosci} & id\_zarzutu PK, typ\_nierzetelnosci NOT NULL, status, data\_zgloszenia, czy\_wycofany, id\_artykulu FK \\
 \end{longtable}
 
-\section{Relacje}
+\subsection{Relacje}
 \begin{itemize}
   \item Wydawca 1—N Czasopisma —N Artykul
   \item Autor N—M Artykul (\texttt{Artykul\_Autor})
@@ -57,22 +70,22 @@ Na bazie \texttt{pomoc.md} i ERD: dodano słowniki (\texttt{Dyscypliny}) i \text
   \item Artykul 1—N LogOceny
 \end{itemize}
 
-\section{Indeksy}
+\subsection{Indeksy}
 Indeksowano kolumny filtrujące i łączące: \texttt{Artykul(rok\_publikacji)}, \texttt{Artykul(data\_ostatniej\_aktualizacji)}, \texttt{Artykul(wspolczynnik\_rzetelnosci)}, \texttt{Afiliacja(kraj)} oraz pomocniczo \texttt{Artykul\_Autor(id\_autora)} i \texttt{(id\_artykulu)}. Wspomnianą w specyfikacji \texttt{data\_publikacji} zastąpiono praktycznymi polami.
 
-\section{Widoki}
+\subsection{Widoki}
 \begin{itemize}
   \item "\texttt{Widok\_Wycofane\_Artykuły\_Wydawcy}" – agregacja % wycofanych na wydawcę.
   \item \texttt{Widok\_Ryzykowne\_Finansowanie} – udział niskiego WR (< 0.2) i średni WR per źródło.
 \end{itemize}
 
-\section{Procedury}
+\subsection{Procedury}
 \begin{itemize}
   \item \texttt{InsertNewArticle(tytul\_in, doi\_in, rok\_in, id\_czasopisma\_in, ...)} – dodaje wiersz do \texttt{Artykul}.
   \item \texttt{UpdateWR(article\_id\_in, new\_wr\_in, ...)} – aktualizuje WR oraz dopisuje wpis w \texttt{LogOceny}.
 \end{itemize}
 
-\section{Dane testowe i przykładowe wyniki}
+\subsection{Dane testowe i przykładowe wyniki}
 Załadowano minimalnie 4 rekordy do każdej tabeli (więcej do \texttt{Artykul}).\newline
 Przykłady:
 \begin{itemize}
@@ -81,7 +94,7 @@ Przykłady:
   \item "Ryzykowne finansowanie" – m.in. NCN, NSF, HorizonEU, PrivateTechFund, BioMedTrust
 \end{itemize}
 
-\section{Skrypty bash i uruchomienie}
+\subsection{Skrypty bash i uruchomienie}
 	exttt{scripts/setup\_db.sh} uruchamia SQL przez stdin (\texttt{sudo -u postgres}); \texttt{scripts/show\_results.sh} wypisuje 4 zapytania (jeden widok w trybie \texttt{-XAtqc}).
 Instrukcja skrótowa:
 \begin{verbatim}
@@ -90,10 +103,10 @@ chmod +x scripts/*.sh
 ./scripts/show_results.sh
 \end{verbatim}
 
-\section{Uwierzytelnianie i środowisko}
+\subsection{Uwierzytelnianie i środowisko}
 Lokalnie działa autoryzacja \emph{peer} dla roli \texttt{postgres} (stąd \texttt{sudo -u postgres}). Alternatywnie: \texttt{PGHOST}/\texttt{PGPORT}/\texttt{PGUSER}/\texttt{PGPASSWORD}.
 
-\section{Gdzie są przechowywane dane}
+\subsection{Gdzie są przechowywane dane}
 W repozytorium dane do zasilenia znajdują się w pliku \texttt{sql/data\_and\_features.sql}.
 
 Fizyczne pliki bazy leżą w katalogu danych PostgreSQL. Na tej maszynie:

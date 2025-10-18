@@ -115,3 +115,40 @@ Tych plików nie modyfikuje się ręcznie — do pracy z danymi używamy SQL (ps
 ## Podsumowanie
 
 Baza RIMS została przygotowana zgodnie z wymaganiami 3NF, wypełniona sensownymi danymi testowymi, wyposażona w procedury i widoki. Dostarczono komplet skryptów SQL i bash do łatwego uruchomienia i weryfikacji.
+
+## Etap 1 — podpunkty 4–10 (odpowiedzi)
+
+4) Struktura tabel (DDL) i atrybuty
+- Plik: `sql/02_schema.sql` — definicje tabel, typów, kluczy i ograniczeń.
+- Główne tabele: `Wydawca`, `Afiliacja`, `Dyscypliny`, `Czasopisma`, `Autor`, `ZrodloFinansowania`, `Artykul`, oraz łączniki `Artykul_Autor`, `Artykul_ZrodloFinansowania`, a także `LogOceny`, `Cytowanie`, `ZarzutNierzetelnosci`.
+- Klucze główne: typowo `SERIAL` (`id_*`) z `PRIMARY KEY`.
+- Atrybuty wymagane i unikalne: m.in. `Czasopisma.tytul UNIQUE NOT NULL`, `Autor.nazwisko NOT NULL`, `Artykul.doi UNIQUE NOT NULL`, `Dyscypliny.nazwa UNIQUE NOT NULL`.
+
+5) Relacje i klucze obce
+- Przykładowe FKi: `Czasopisma(id_wydawcy) REFERENCES Wydawca(id_wydawcy)`, `Czasopisma(id_dyscypliny) REFERENCES Dyscypliny(id_dyscypliny)`, `Autor(id_afiliacji) REFERENCES Afiliacja(id_afiliacji)`, `Artykul(id_czasopisma) REFERENCES Czasopisma(id_czasopisma)`.
+- Relacje N:M: `Artykul_Autor(id_artykulu,id_autora)`, `Artykul_ZrodloFinansowania(id_artykulu,id_zrodla)` — klucze złożone pokrywające pary.
+- Dodatkowe zależności: `Cytowanie(id_cytujacego,id_cytowanego)` (self-FK na `Artykul`), `ZarzutNierzetelnosci(id_artykulu)` (1:N).
+
+6) Ograniczenia integralności i normalizacja
+- Ograniczenia: `NOT NULL` na kluczowych kolumnach, `UNIQUE` (np. `doi`, `tytul`, nazwy słowników), domenowe zakresy typów (np. `DECIMAL(4,3)` dla WR).
+- Normalizacja: projekt w 3NF — słowniki (`Dyscypliny`, `Wydawca`), rozdzielenie autorów i źródeł finansowania przez tabele łącznikowe N:M, brak atrybutów wielowartościowych i zależności przechodnich w pojedynczych tabelach.
+
+7) Dane przykładowe i DML
+- Plik: `sql/data_and_features.sql` — wsad danych (≥4 rekordy w słownikach, ≥20 artykułów; obecnie dodano też pakiet PW: `Politechnika Warszawska`, 3 autorów, 3 artykuły, nowe czasopismo `Warsaw Tech Reports`).
+- W pliku znajdują się również przykładowe wywołania DML (procedury poniżej) oraz 2 zapytania złożone do weryfikacji.
+
+8) Perspektywy (widoki) — 2 szt.
+- "`Widok_Wycofane_Artykuły_Wydawcy`" — agreguje liczbę i procent wycofanych artykułów per wydawca (łączenia: Wydawca→Czasopisma→Artykul→ZarzutNierzetelnosci). Definicja w `sql/03_indexes_views.sql` oraz re-kreacja w `sql/data_and_features.sql`.
+- `Widok_Ryzykowne_Finansowanie` — dla źródeł finansowania liczy liczbę artykułów, średni WR i udział niskiego WR (<0.200). Także utrwalony w `sql/03_indexes_views.sql`/`data_and_features.sql`.
+
+9) Indeksy — min. 2 (jest więcej)
+- `idx_artykul_rok_publikacji` na `Artykul(rok_publikacji)` — wspiera filtry/porządkowanie po roku.
+- `idx_artykul_wspolczynnik_rzetelnosci` na `Artykul(wspolczynnik_rzetelnosci)` — przyspiesza analizy ryzyka (WR).
+- Dodatkowo: `idx_artykul_data_ostatniej_aktualizacji`, `idx_afiliacja_kraj`, pomocnicze `idx_aa_id_autora`, `idx_aa_id_artykulu`.
+
+10) Procedury/operacje i przykładowe użycie
+- Procedury w `sql/data_and_features.sql`:
+	- `InsertNewArticle(...)` — dodaje artykuł (parametry z domyślnymi wartościami dla części pól).
+	- `UpdateWR(article_id_in, new_wr_in, id_uzytkownika_in DEFAULT NULL)` — aktualizuje WR i zapisuje wpis do `LogOceny`.
+- Przykładowe wywołania: 3× `CALL InsertNewArticle(...)`, 2× `CALL UpdateWR(...)` (sekcja „USAGE EXAMPLES”).
+- Weryfikację wyników ułatwia `scripts/show_results.sh` (SELECT count, widoki, ostatnie wpisy w `LogOceny`).
