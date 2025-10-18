@@ -1,0 +1,6 @@
+id_wydawcy,nazwa,kraj,srednia_retrakcji,czy_otwarty_dostep
+11,SciPress,Polska,0.015,t
+12,GlobalPub,USA,0.030,f
+13,EuroScience,Niemcy,0.025,t
+14,AsiaAcad,Japonia,0.020,t
+15,LatAm Research,Brazylia,0.018,f

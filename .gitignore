@@ -21,6 +21,16 @@ scripts/*
 !scripts/*.md
 !scripts/*.py
 
+# Keep docs site for GitHub Pages
+!docs/
+docs/*
+!docs/index.html
+!docs/README.md
+!docs/schema.sql
+!docs/csv/
+docs/csv/*
+!docs/csv/*.csv
+
 # Keep copilot_input directory and its Markdown files
 !copilot_input/
 copilot_input/*

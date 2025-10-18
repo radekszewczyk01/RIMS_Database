@@ -1,0 +1,11 @@
+id_zarzutu,typ_nierzetelnosci,status,data_zgloszenia,czy_wycofany,id_artykulu
+6,plagiat,zakończony,2024-02-01,t,44
+7,dane fałszywe,w toku,2024-03-12,f,48
+8,manipulacja recenzją,zakończony,2024-04-10,t,52
+9,błąd metodologiczny,zakończony,2024-05-05,t,55
+10,inne,w toku,2024-05-20,f,61
+11,dane fałszywe,w toku,2024-03-12,f,48
+12,manipulacja recenzją,zakończony,2024-04-10,t,52
+13,błąd metodologiczny,zakończony,2024-05-05,t,55
+14,inne,w toku,2024-05-20,f,61
+15,plagiat,zakończony,2024-02-01,t,44

@@ -1,0 +1,25 @@
+id_artykulu,tytul,doi,rok_publikacji,punkty_mein,wspolczynnik_rzetelnosci,data_ostatniej_aktualizacji,id_czasopisma
+43,Algorytmy rozproszone A,10.1000/jc.0001,2021,100,0.920,2024-01-10,11
+45,Systemy czasu rzeczywistego C,10.1000/jc.0003,2020,70,0.300,2023-12-05,11
+46,Uczenie maszynowe D,10.1000/jc.0004,2019,120,0.250,2024-01-15,11
+47,Cząstki elementarne E,10.2000/ple.0001,2018,90,0.700,2024-03-01,12
+48,Fale grawitacyjne F,10.2000/ple.0002,2022,85,0.280,2024-04-04,12
+49,Nadprzewodniki G,10.2000/ple.0003,2023,95,0.150,2024-05-06,12
+50,Sekwencjonowanie genomu H,10.3000/bf.0001,2021,110,0.350,2024-01-25,13
+52,Metabolomika J,10.3000/bf.0003,2020,65,0.180,2024-03-08,13
+53,Kataliza węglowodorów K,10.4000/ct.0001,2017,60,0.410,2024-04-18,14
+54,Nowe polimery L,10.4000/ct.0002,2018,70,0.270,2024-05-20,14
+55,Baterie litowe M,10.4000/ct.0003,2023,90,0.140,2024-05-22,14
+56,Topologia N,10.5000/mi.0001,2015,50,0.800,2024-01-01,15
+57,Analiza funkcjonalna O,10.5000/mi.0002,2016,55,0.600,2024-01-02,15
+58,Teoria liczb P,10.5000/mi.0003,2018,65,0.200,2024-01-03,15
+59,Systemy rozproszone Q,10.1000/jc.0005,2021,85,0.330,2024-02-01,11
+60,Algorytmy grafowe R,10.1000/jc.0006,2022,95,0.290,2024-03-01,11
+61,Uczenie głębokie S,10.1000/jc.0007,2023,105,0.180,2024-03-15,11
+62,Teoria informacji T,10.1000/jc.0008,2024,75,0.260,2024-04-01,11
+63,Analiza danych U,10.1000/jc.0009,2020,70,0.120,2024-04-10,11
+64,Nowe podejście do indeksów,10.1000/jc.0100,2024,95,0.310,2025-10-18,11
+65,Analiza rozproszona w praktyce,10.1000/jc.0101,2023,88,0.280,2025-10-18,11
+66,Techniki optymalizacji zapytań,10.1000/jc.0102,2022,92,0.450,2025-10-18,11
+44,Analiza złożoności B,10.1000/jc.0002,2022,80,0.180,2025-10-18,11
+51,CRISPR i etyka I,10.3000/bf.0002,2019,75,0.260,2025-10-18,13
